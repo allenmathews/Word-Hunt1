@@ -1,38 +1,50 @@
-import { createTheme, MenuItem, TextField, ThemeProvider } from '@material-ui/core'
+import { createMuiTheme, MenuItem, TextField, ThemeProvider } from '@material-ui/core'
 import React from 'react'
 import './Header.css'
+import categories from '../../data/category'
 
-const Header = () => {
-  const darkTheme = createTheme({
+const Header = ({setCategory, category, word, setWord, LightMode}) => {
+  const darkTheme = createMuiTheme({
     palette: {
       primary: {
-        main: '#fff',
+        main:LightMode? "#000" : '#fff',
       },
-      type: 'dark',
+      type: LightMode? "light" : 'dark',
     },
-  })
+  });
+
+  const handleChange = (language) => {
+    setCategory(language);
+    setWord("")
+  }
 
   return (
     <div className="header">
-      <span className="title">Word Hunt</span>
+      <span className="title">{word ? word : "Word Hunt"}</span>
       <div className="inputs">
         <ThemeProvider theme={darkTheme}>
-          <TextField id="standard-basic" label="Standard" />
+          <TextField 
+          className="search" 
+          label="Search a Word"
+          label="Standard" 
+          value={word}
+          onChange={(e) => setWord(e.target.value)}
+          />
           <TextField
-            id="outlined-select-currency"
+          className="select" 
             select
-            label="Select"
-            helperText="Please select your currency"
+            label="Language"
+            value={category}
+            onChange={(e) => handleChange(e.target.value)}
           >
-        <MenuItem>
-            English
-        </MenuItem>
-            ))
+              {categories.map((option) => (
+                    <MenuItem key={option.label} value={option.label}> {option.value} 
+                    </MenuItem>
+                ))}
           </TextField>
         </ThemeProvider>
       </div>
     </div>
-  )
-}
-
-export default Header
+  );
+};
+export default Header;
